@@ -49,48 +49,48 @@ but you should think about it.
 
 ## Spike Extraction/extractSpikes.m:
 
-*filelen                       As above
-*array                         As above
-*ChannelGroups                 Cell array giving electrode numbers within each group
+- *filelen                       As above
+- *array                         As above
+- *ChannelGroups                 Cell array giving electrode numbers within each group
 
 ## Statistics/getNoiseAndWhiteningFilter.m:
 
-*ChannelGroups                 As above
+- *ChannelGroups                 As above
 
 ## Clustering/order_points.m:
 
-optics_minpts                  OPTICS parameter which, roughly speaking, controls "fragmentation" of clusters (bigger means less fragmentation but you miss more small clusters)      
-optics_eps                     OPTICS parameter which roughly sets an upper bound on distances between elemnts of the same cluster. Nothing lost by making it really big, except maybe some speed.
-interpfactor                   Interpolation factor, only used for aligning spikes prior to clustering.
+- optics_minpts                  OPTICS parameter which, roughly speaking, controls "fragmentation" of clusters (bigger means less fragmentation but you miss more small clusters)      
+- optics_eps                     OPTICS parameter which roughly sets an upper bound on distances between elemnts of the same cluster. Nothing lost by making it really big, except maybe some speed.
+- interpfactor                   Interpolation factor, only used for aligning spikes prior to clustering.
 
 ## Clustering/makeTemplates.m:
 
-?spikenbd                      Number of channels around peak to include in the template.
-**ccwidth                      Maximum time shift to apply to events in aligning them for template building. Measured in samples.
+- ?spikenbd                      Number of channels around peak to include in the template.
+- **ccwidth                      Maximum time shift to apply to events in aligning them for template building. Measured in samples.
 
 ## Statistics/updateClusterStats.m:
 
-alpha                          These are all hyperparameters for the conjugate priors used in 
-beta                           inferring amplitude and firing rate statistics.
-nu
-lambda
-a
-b
+- alpha                          These are all hyperparameters for the conjugate priors used in 
+- beta                           inferring amplitude and firing rate statistics.
+- nu
+- lambda
+- a
+- b
 
 ## Spike Fitting/preFit.m:
 
-relevantthresh                  If a spike's amplitude is weaker than a template amplitude by more than this factor, don't bother trying to fit that template to the spike.
-**correlationrange              Maximum time shift, relative to spike peak, to apply to templates in fitting. Measured in samples.
-?widths                         Factors by which to stretch template widths. Maybe to get off the ground just try widths = [1] (no width fitting).
+r- elevantthresh                  If a spike's amplitude is weaker than a template amplitude by more than this factor, don't bother trying to fit that template to the spike.
+- **correlationrange              Maximum time shift, relative to spike peak, to apply to templates in fitting. Measured in samples.
+- ?widths                         Factors by which to stretch template widths. Maybe to get off the ground just try widths = [1] (no width fitting).
 
 ## Spike Fitting/cmultifit.m:
 
-adjmethod                       "fast" or "slow." Use "fast" unless you run out of memory.
-**timewindow                    During fitting, spikes are temporally cropped to a window of this size around the peak.
-*interestingVThresh             Fitting terminates if no voltage crosses this threshold.
-?interestingRThresh             Fitting terminates if the probability ratio of the best fitting template doesn't exceed this threshold.
-?NMaxFitSpike                   Maximum number of templates to fit to a given event.
-?spikenbd                       Number of channels around peak to include in event being fit. See makeTemplates.m.
+- adjmethod                       "fast" or "slow." Use "fast" unless you run out of memory.
+- **timewindow                    During fitting, spikes are temporally cropped to a window of this size around the peak.
+- *interestingVThresh             Fitting terminates if no voltage crosses this threshold.
+- ?interestingRThresh             Fitting terminates if the probability ratio of the best fitting template doesn't exceed this threshold.
+- ?NMaxFitSpike                   Maximum number of templates to fit to a given event.
+- ?spikenbd                       Number of channels around peak to include in event being fit. See makeTemplates.m.
 
 # Instructions
 
@@ -99,24 +99,24 @@ adjmethod                       "fast" or "slow." Use "fast" unless you run out 
 The main file which controls all the different spike sorting stages is SpikeSort.m. It is organized using MATLAB's cell mode, so the idea is to advance through the cells one at a time to perform the different steps in the process.
 
 At top there is a list of parameters, some of which will need to be changed for each spike sorting session. Many of them are described in "Installation.txt." The remaining ones, which will change from run to run, are described here: 
-	datadir is the directory containing the raw data files.
-	outputdir is where to put the spike times.
-	clusterdir is where to put the clustered data.
-	infileprefix is the prefix of the raw data files. The code assumes that they are named "infileprefix1"..."infileprefixN", and that consecutively 		      numbered files correspond to contiguously recorded data.
-	clustfiles is a list of which raw data files to use in clustering. Choose ~2 min of data, spread uniformly throughout the experiment.
-	noisefile is the data file used to get statistics on the noise. By default it is the first clustfile, and this probably doesn't need to be changed.
-	fitfiles is the list of raw data files from which to get spike times.
+- 	datadir is the directory containing the raw data files.
+- 	outputdir is where to put the spike times.
+- 	clusterdir is where to put the clustered data.
+- 	infileprefix is the prefix of the raw data files. The code assumes that they are named "infileprefix1"..."infileprefixN", and that consecutively 		      numbered files correspond to contiguously recorded data.
+- 	clustfiles is a list of which raw data files to use in clustering. Choose ~2 min of data, spread uniformly throughout the experiment.
+- 	noisefile is the data file used to get statistics on the noise. By default it is the first clustfile, and this probably doesn't need to be changed.
+- 	fitfiles is the list of raw data files from which to get spike times.
 
 The clustering code outputs to clusterdir:
-	One "Cluster*.mat" file for each cluster. It contains a matrix, "C", with all the events in the cluster. "mCluster*.mat" is analogous for the merged 	clusters, and "mmCluster*.mat" for the second round of merging.
+- 	One "Cluster*.mat" file for each cluster. It contains a matrix, "C", with all the events in the cluster. "mCluster*.mat" is analogous for the merged 	clusters, and "mmCluster*.mat" for the second round of merging.
 
-	"TemplateMatrix.mat" contains all the templates.
-	"Stats.mat" contains parameters of the priors for each template.
+- 	"TemplateMatrix.mat" contains all the templates.
+- 	"Stats.mat" contains parameters of the priors for each template.
 
 The fitting code outputs to outputdir:
-	One "ST__*" file for each raw data file. It contains "SpikeTimes," a cell array each of whose entries is the list of spike times (in samples) for the 	corresponding cluster, "amplist," a cell array whose entries are lists of amplitude scale factors for each fit of the corresponding template, and 	"stats," which gives the priors used in fitting that raw data file.
+- 	One "ST__*" file for each raw data file. It contains "SpikeTimes," a cell array each of whose entries is the list of spike times (in samples) for the 	corresponding cluster, "amplist," a cell array whose entries are lists of amplitude scale factors for each fit of the corresponding template, and 	"stats," which gives the priors used in fitting that raw data file.
 	
-	"SpikeTimes" is of course the main output of the code. The other things can be useful for diagnostic purposes.
+- 	"SpikeTimes" is of course the main output of the code. The other things can be useful for diagnostic purposes.
 
 
 ## Using the clustering GUI (plots.m)
