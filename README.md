@@ -1,0 +1,2 @@
+# PennSort
+Spike Sorting Software
