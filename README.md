@@ -79,7 +79,7 @@ but you should think about it.
 
 ## Spike Fitting/preFit.m:
 
-r- elevantthresh                  If a spike's amplitude is weaker than a template amplitude by more than this factor, don't bother trying to fit that template to the spike.
+- relevantthresh                  If a spike's amplitude is weaker than a template amplitude by more than this factor, don't bother trying to fit that template to the spike.
 - **correlationrange              Maximum time shift, relative to spike peak, to apply to templates in fitting. Measured in samples.
 - ?widths                         Factors by which to stretch template widths. Maybe to get off the ground just try widths = [1] (no width fitting).
 
