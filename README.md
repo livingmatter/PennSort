@@ -35,47 +35,41 @@ time scales than ours.
 Parameters preceded by ? probably don't need to be changed,
 but you should think about it.
 
-------------
-SpikeSort.m:
-------------
-**onewaveformlength            Length, in samples, of event clips
-*numberchanns                  Number of electrodes
-**ndecimate                    Factor by which to interpolate templates
-*group                         If array has multiple electrode groups, which one to process
-*filelen                       Length, in samples, of one raw data file.
-*array                         Structure encoding array geometry. See note above.
-*threshold                     Spike threshold
-*noisethresh                   Noise threshold
-?whiten                        Whether or not to spatially whiten
+## SpikeSort.m:
 
----------------------------------
-Spike Extraction/extractSpikes.m:
----------------------------------
+- **onewaveformlength            Length, in samples, of event clips
+- *numberchanns                  Number of electrodes
+- **ndecimate                    Factor by which to interpolate templates
+- *group                         If array has multiple electrode groups, which one to process
+- *filelen                       Length, in samples, of one raw data file.
+- *array                         Structure encoding array geometry. See note above.
+- *threshold                     Spike threshold
+- *noisethresh                   Noise threshold
+- ?whiten                        Whether or not to spatially whiten
+
+## Spike Extraction/extractSpikes.m:
+
 *filelen                       As above
 *array                         As above
 *ChannelGroups                 Cell array giving electrode numbers within each group
 
-----------------------------------------
-Statistics/getNoiseAndWhiteningFilter.m:
-----------------------------------------
+## Statistics/getNoiseAndWhiteningFilter.m:
+
 *ChannelGroups                 As above
 
---------------------------
-Clustering/order_points.m:
---------------------------
+## Clustering/order_points.m:
+
 optics_minpts                  OPTICS parameter which, roughly speaking, controls "fragmentation" of clusters (bigger means less fragmentation but you miss more small clusters)      
 optics_eps                     OPTICS parameter which roughly sets an upper bound on distances between elemnts of the same cluster. Nothing lost by making it really big, except maybe some speed.
 interpfactor                   Interpolation factor, only used for aligning spikes prior to clustering.
 
----------------------------
-Clustering/makeTemplates.m:
----------------------------
+## Clustering/makeTemplates.m:
+
 ?spikenbd                      Number of channels around peak to include in the template.
 **ccwidth                      Maximum time shift to apply to events in aligning them for template building. Measured in samples.
 
---------------------------------
-Statistics/updateClusterStats.m:
---------------------------------
+## Statistics/updateClusterStats.m:
+
 alpha                          These are all hyperparameters for the conjugate priors used in 
 beta                           inferring amplitude and firing rate statistics.
 nu
@@ -83,16 +77,14 @@ lambda
 a
 b
 
------------------------
-Spike Fitting/preFit.m:
------------------------
+## Spike Fitting/preFit.m:
+
 relevantthresh                  If a spike's amplitude is weaker than a template amplitude by more than this factor, don't bother trying to fit that template to the spike.
 **correlationrange              Maximum time shift, relative to spike peak, to apply to templates in fitting. Measured in samples.
 ?widths                         Factors by which to stretch template widths. Maybe to get off the ground just try widths = [1] (no width fitting).
 
---------------------------
-Spike Fitting/cmultifit.m:
---------------------------
+## Spike Fitting/cmultifit.m:
+
 adjmethod                       "fast" or "slow." Use "fast" unless you run out of memory.
 **timewindow                    During fitting, spikes are temporally cropped to a window of this size around the peak.
 *interestingVThresh             Fitting terminates if no voltage crosses this threshold.
@@ -102,9 +94,7 @@ adjmethod                       "fast" or "slow." Use "fast" unless you run out 
 
 # Instructions
 
------------------
-Using SpikeSort.m
------------------
+## Using SpikeSort.m
 
 The main file which controls all the different spike sorting stages is SpikeSort.m. It is organized using MATLAB's cell mode, so the idea is to advance through the cells one at a time to perform the different steps in the process.
 
@@ -129,9 +119,7 @@ The fitting code outputs to outputdir:
 	"SpikeTimes" is of course the main output of the code. The other things can be useful for diagnostic purposes.
 
 
-----------------------------------
-Using the clustering GUI (plots.m)
-----------------------------------
+## Using the clustering GUI (plots.m)
 
 After running OPTICS, SpikeSort.m saves the ordered events to a file prefixed by "DataToCluster_", placed in the specified cluster directory.
 Load this file with File -> Open from .mat
@@ -149,16 +137,12 @@ The green arrow icons play movies of the events in a cluster but they're current
 When done, you may use File -> Save Cluster Boundaries to save your work as a .clu file. There is also a corresponding "Open cluster boundaries." Close the GUI to advance SpikeSort to the next step.
 
 
-----------------
-Merging clusters
-----------------
+## Merging clusters
 
 The code will display pairs of overlapping templates in a new window. If you think they match well enough that the corresponding clusters should be merged, type 'y' at the MATLAB command line. If you don't want them merged, just hit enter to see the next one. The merged clusters are stored in files called "mCluster*.mat" in the specified cluster directory.
 
 
-------------------------------------------------
-Using the cluster splitting GUI (clustersplit.m)
-------------------------------------------------
+## Using the cluster splitting GUI (clustersplit.m)
 
 When it first opens you'll get a file dialog box. Navigate to the cluster directory and select any one of the "mCluster" files.
 
