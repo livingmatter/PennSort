@@ -1,0 +1,1 @@
+function y=DataLowPassFilter(x);% y=DataLowPassFilter(x);% Lowpass filter below 200Hz using FIR filter[a1 a2]=size(x);%b=fir1(100,[0.000001 200/10000],'stop');load StopFilterData.matb=b/norm(b);for i=1:a1	y(i,:)=filter(b,1,x(i,:));end;

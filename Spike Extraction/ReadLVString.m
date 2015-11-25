@@ -1,0 +1,1 @@
+function str = ReadLVString(fid)% read a LabVIEW stringstrlen = fread(fid,1,'int32'); %a%disp(strlen); %str = char(fread(fid,10,'uchar'));str = char(fread(fid,strlen,'uchar')); %b%disp(str); if (size(str,2) == 1)	str = str';end
